@@ -1,21 +1,22 @@
 import re
-import os.path
+import argparse
 
 # 2. The code must include a succinct description of the converter at the top of the file using triple quotes. Put appropriate code comments to promote readability.
 
 class PigLatin:
 
   defaultOutputFilePath = "out.txt"
-  
+  consonantSuffix = "ay"
+
   # driver
-  def fileLatinify(self, inputFile, outputFile="out.txt"):
+  def fileLatinify(self, inputFile="data.txt", outputFile="out.txt"):
     f = open(inputFile, "r")
 
     # if output file is none
     # then default to out.txt
 
     # If no output file exists at the given path, output to the specified default instead
-    if (os.path.isfile(outputFile)):
+    if (outputFile == None):
       outputFile = self.defaultOutputFilePath
 
     lineList = f.readlines()
@@ -43,10 +44,14 @@ class PigLatin:
       newLineList.append("".join(newWordList)) # Join the split list from splitString() together
       print("final wordList after loop: {}".format(newWordList))
 
-    
+    f.close()
     # output into a text file
     print(newLineList)
-  
+    
+    n = open(outputFile, "w")
+    for line in newLineList:
+      n.write(line)
+    n.close()
 
   def splitString(self, s):
     pattern = r"\b" # not sure what the preceding r does but it changes the meaning big time
@@ -75,7 +80,7 @@ class PigLatin:
     firstLetter = word[0:1]
 
     newWord = word[1:]
-    newWord = newWord + firstLetter.lower() + "ay."
+    newWord = newWord + firstLetter.lower() + self.consonantSuffix
 
     # Captialize the new first letter if the original first letter was upper
     if (firstLetter.isupper()):
@@ -92,7 +97,7 @@ class PigLatin:
     firstTwoLetters = word[0:2]
 
     newWord = word[2:]
-    newWord = newWord + firstTwoLetters.lower() + "ay."
+    newWord = newWord + firstTwoLetters.lower() + self.consonantSuffix
 
     # Captialize first letter if needed
     letterList = list(newWord)
@@ -130,6 +135,11 @@ class PigLatin:
     # find out if readlines preserves whitespace
 
 def main():
-  PigLatin().fileLatinify("data.txt")
+  parser = argparse.ArgumentParser()
+  parser.add_argument("--input")
+  parser.add_argument("--output")
+  args = parser.parse_args()
+
+  PigLatin().fileLatinify(args.input, args.output)
 
 main()
