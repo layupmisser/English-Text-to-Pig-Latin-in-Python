@@ -1,3 +1,5 @@
+# """Converter uses regex to isolate words from symbols and whitespace. Then, the functions below convert each word individually then writes them into the output file."""
+
 import re
 import argparse
 
